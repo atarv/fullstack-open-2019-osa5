@@ -27,7 +27,7 @@ const LoginForm = props => {
                 </label>
                 <br />
                 <br />
-                <button>Kirjaudu</button>
+                <button>Kirjaudu sisään</button>
             </form>
         </div>
     )
