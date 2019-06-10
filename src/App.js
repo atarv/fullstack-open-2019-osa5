@@ -5,6 +5,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notifier from './components/Notifier'
+import Togglable from './components/Togglable'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -81,7 +82,9 @@ const App = () => {
             <p>Kirjautuneena: {user.username}</p>
             <button onClick={handleLogout}>Kirjaudu ulos</button>
             <h3>Luo uusi</h3>
-            <BlogForm handleCreate={handleCreate} />
+            <Togglable buttonText="Uusi blogi">
+                <BlogForm handleCreate={handleCreate} />
+            </Togglable>
             {blogs.map(blog => (
                 <Blog key={blog.id} blog={blog} />
             ))}
