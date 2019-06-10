@@ -11,6 +11,7 @@ const App = () => {
     const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
     const [message, setMessage] = useState(null)
+    const messageDelay = 3000
 
     const handleLogin = async (event, username, password) => {
         event.preventDefault()
@@ -24,7 +25,7 @@ const App = () => {
             setUser(user)
         } catch (exception) {
             setMessage('Virheellinen käyttäjänimi tai salasana')
-            setTimeout(() => setMessage(null), 3000)
+            setTimeout(() => setMessage(null), messageDelay)
         }
     }
 
@@ -42,17 +43,48 @@ const App = () => {
             setMessage(`lisättiin uusi blogi ${response.title}`)
             setTimeout(() => {
                 setMessage(null)
-            }, 3000)
-        } catch (error) {
-            console.log(error)
+            }, messageDelay)
+        } catch (exception) {
+            console.log(exception)
             setMessage('Blogin lisääminen epäonnistui')
-            setTimeout(() => setMessage(null), 3000)
+            setTimeout(() => setMessage(null), messageDelay)
+        }
+    }
+
+    const handleLike = async blog => {
+        try {
+            const updatedBlog = { ...blog }
+            updatedBlog.likes = blog.likes + 1
+            updatedBlog.userId = blog.userId.id
+            const response = await blogService.updateBlog(updatedBlog)
+            if (response.status !== 204) {
+                throw new { message: 'Update failed', response }()
+            }
+            setMessage(`Tykkäsit blogia ${updatedBlog.title}`)
+            setTimeout(() => setMessage(null), messageDelay)
+        } catch (exception) {
+            console.log(exception)
+            setMessage('Tykkäys epäonnistui')
+            setTimeout(() => setMessage(null), messageDelay)
+        }
+    }
+
+    const handleDelete = async blog => {
+        if (window.confirm(`Haluatko varmasti poistaa blogin ${blog.title}`)) {
+            try {
+                await blogService.deleteBlog(blog)
+            } catch (exception) {
+                console.log(exception)
+            }
         }
     }
 
     // hakee blogit
     useEffect(() => {
-        blogService.getAll().then(blogs => setBlogs(blogs))
+        blogService.getAll().then(blogs => {
+            blogs.sort((a, b) => b.likes - a.likes)
+            setBlogs(blogs)
+        })
     }, [])
 
     // hakee mahdollisen jo kirjautuneen käyttäjän tiedot
@@ -61,6 +93,8 @@ const App = () => {
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
             setUser(user)
+            console.log(user)
+
             blogService.setToken(user.token)
         }
     }, [])
@@ -85,9 +119,18 @@ const App = () => {
             <Togglable buttonText="Uusi blogi">
                 <BlogForm handleCreate={handleCreate} />
             </Togglable>
-            {blogs.map(blog => (
-                <Blog key={blog.id} blog={blog} />
-            ))}
+            {blogs.map(blog => {
+                const showRemove = user.name === blog.userId.name
+                return (
+                    <Blog
+                        key={blog.id}
+                        blog={blog}
+                        handleLike={handleLike}
+                        handleDelete={handleDelete}
+                        showRemove={showRemove}
+                    />
+                )
+            })}
         </div>
     )
 }

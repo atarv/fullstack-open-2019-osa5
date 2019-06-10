@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike, handleDelete, showRemove }) => {
     const [minimized, setMinimized] = useState(true)
     const toggleMinimize = state => {
         setMinimized(!minimized)
@@ -11,6 +11,10 @@ const Blog = ({ blog }) => {
         borderRadius: 4,
         margin: '0.3em'
     }
+    const removeButtonStyle = {
+        display: showRemove ? '' : 'none'
+    }
+
     if (minimized) {
         return (
             <div style={blogStyle}>
@@ -30,9 +34,12 @@ const Blog = ({ blog }) => {
                 <a href={blog.url}>{blog.url}</a>
             </p>
             <p>
-                {blog.likes} likes <button>Like</button>
+                {blog.likes} likes <button onClick={() => handleLike(blog)}>Like</button>
             </p>
-            <p>added by {blog.user}</p>
+            <p>added by {blog.userId.name}</p>
+            <button style={removeButtonStyle} onClick={() => handleDelete(blog)}>
+                Remove
+            </button>
         </div>
     )
 }
