@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleLike, handleDelete, showRemove }) => {
     const [minimized, setMinimized] = useState(true)
-    const toggleMinimize = state => {
+    const toggleMinimize = () => {
         setMinimized(!minimized)
     }
     const blogStyle = {
@@ -18,7 +19,7 @@ const Blog = ({ blog, handleLike, handleDelete, showRemove }) => {
     if (minimized) {
         return (
             <div style={blogStyle}>
-                <p onClick={({ target }) => toggleMinimize(minimized)}>
+                <p onClick={() => toggleMinimize(minimized)}>
                     {blog.title} - {blog.author}
                 </p>
             </div>
@@ -27,7 +28,7 @@ const Blog = ({ blog, handleLike, handleDelete, showRemove }) => {
 
     return (
         <div style={blogStyle}>
-            <p onClick={({ target }) => toggleMinimize(minimized)}>
+            <p onClick={() => toggleMinimize(minimized)}>
                 {blog.title} - {blog.author}
             </p>
             <p>
@@ -42,6 +43,13 @@ const Blog = ({ blog, handleLike, handleDelete, showRemove }) => {
             </button>
         </div>
     )
+}
+
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    handleLike: PropTypes.func,
+    handleDelete: PropTypes.func,
+    handleRemove: PropTypes.func
 }
 
 export default Blog

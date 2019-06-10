@@ -29,7 +29,7 @@ const App = () => {
         }
     }
 
-    const handleLogout = async event => {
+    const handleLogout = async () => {
         window.localStorage.removeItem('loggedBlogsUser')
         blogService.unsetToken()
         setUser(null)
