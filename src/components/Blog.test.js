@@ -27,6 +27,7 @@ test('clicking minimized blog reveals full blog entry', () => {
     fireEvent.click(title)
 
     expect(blog).toHaveTextContent('Blog title - Author')
+    expect(blog).toHaveTextContent('www.example.com')
     expect(blog).toHaveTextContent('3 likes')
     expect(blog).toHaveTextContent('added by test')
 })
