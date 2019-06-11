@@ -1,29 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useField, omit } from '../hooks'
 
 const LoginForm = props => {
-    const [username, setUsername] = useState(props.username ? props.username : '')
-    const [password, setPassword] = useState(props.password ? props.password : '')
+    // const [username, setUsername] = useState(props.username ? props.username : '')
+    // const [password, setPassword] = useState(props.password ? props.password : '')
+    // const omit = (prop, { [prop]: _, ...rest }) => rest
+    const username = omit('reset', useField('text'))
+    const password = omit('reset', useField('password'))
 
     return (
         <div>
-            <form onSubmit={e => props.handleLogin(e, username, password)}>
+            <form onSubmit={e => props.handleLogin(e, username.value, password.value)}>
                 <label>
-                    käyttäjä{' '}
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
+                    käyttäjä <input {...username} />
                 </label>
                 <br />
                 <br />
                 <label>
-                    salasana{' '}
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
+                    salasana <input {...password} />
                 </label>
                 <br />
                 <br />
